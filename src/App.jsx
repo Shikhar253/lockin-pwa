@@ -230,24 +230,40 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quote] = useState(() => Math.floor(Math.random() * QUOTES.length));
+  const [journalNote, setJournalNote] = useState("");
+  const [journalSaved, setJournalSaved] = useState(false);
+  const [journalSaving, setJournalSaving] = useState(false);
   const upsertTimers = useRef({});
 
-  // Load all history on mount
+  // Load habit history and today's journal on mount
   useEffect(() => {
-    async function loadHistory() {
+    async function loadData() {
       try {
-        const { data, error: err } = await supabase
+        const todayKey = getTodayKey();
+
+        const { data: habitRows, error: habitErr } = await supabase
           .from("habit_history")
           .select("date, habits")
           .eq("user_id", USER_ID);
 
-        if (err) throw err;
+        if (habitErr) throw habitErr;
 
         const rebuilt = {};
-        for (const row of data) {
+        for (const row of habitRows || []) {
           rebuilt[row.date] = row.habits;
         }
         setHistory(rebuilt);
+
+        const { data: journalRow, error: journalErr } = await supabase
+          .from("journal_entries")
+          .select("note")
+          .eq("user_id", USER_ID)
+          .eq("date", todayKey)
+          .maybeSingle();
+
+        if (journalErr) throw journalErr;
+
+        setJournalNote(journalRow?.note || "");
       } catch (err) {
         setError("Failed to load data. Check your connection.");
         console.error(err);
@@ -255,7 +271,8 @@ export default function App() {
         setLoading(false);
       }
     }
-    loadHistory();
+
+    loadData();
   }, []);
 
   async function upsertDate(date, habits) {
@@ -288,6 +305,36 @@ export default function App() {
     upsertTimers.current[todayKey] = setTimeout(() => {
       upsertDate(todayKey, updated[todayKey]);
     }, 400);
+  }
+
+  async function saveJournal() {
+    const todayKey = getTodayKey();
+    setJournalSaving(true);
+    setJournalSaved(false);
+
+    try {
+      const { error: err } = await supabase
+        .from("journal_entries")
+        .upsert(
+          {
+            user_id: USER_ID,
+            date: todayKey,
+            note: journalNote.trim(),
+          },
+          { onConflict: "user_id,date" }
+        );
+
+      if (err) throw err;
+
+      setError(null);
+      setJournalSaved(true);
+      setTimeout(() => setJournalSaved(false), 1800);
+    } catch (err) {
+      setError("Journal sync failed. Try saving again.");
+      console.error(err);
+    } finally {
+      setJournalSaving(false);
+    }
   }
 
   const todayKey = getTodayKey();
@@ -378,8 +425,8 @@ export default function App() {
               return (
                 <div key={category} className="habit-category">
                   <div className="habit-category-header">
-                    <span>{category}</span>
-                    <span>{categoryDone}/{categoryHabits.length}</span>
+                    <span className="habit-category-title">{category}</span>
+                    <span className="habit-category-count">{categoryDone} / {categoryHabits.length}</span>
                   </div>
 
                   {categoryHabits.map((habit) => {
@@ -416,6 +463,38 @@ export default function App() {
               <div className="locked-in-sub">Self-respect, health, and mission. Keep going.</div>
             </div>
           )}
+        </section>
+
+        {/* Journal */}
+        <section className="journal-section">
+          <div className="section-label">NIGHT JOURNAL</div>
+
+          <div className="journal-card">
+            <div className="journal-prompts">
+              <div>What did I do today?</div>
+              <div>What went well?</div>
+              <div>What needs fixing tomorrow?</div>
+            </div>
+
+            <textarea
+              className="journal-textarea"
+              value={journalNote}
+              onChange={(event) => {
+                setJournalNote(event.target.value);
+                setJournalSaved(false);
+              }}
+              placeholder={"1. Today I did...\n2. What went well...\n3. Tomorrow I need to fix..."}
+              rows={7}
+            />
+
+            <button
+              className="journal-save-btn"
+              onClick={saveJournal}
+              disabled={journalSaving}
+            >
+              {journalSaving ? "SAVING..." : journalSaved ? "SAVED ✓" : "SAVE JOURNAL"}
+            </button>
+          </div>
         </section>
 
         {/* Heatmap */}

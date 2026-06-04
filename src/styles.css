@@ -423,3 +423,59 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+.habit-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.habit-category-count {
+  margin-left: 12px;
+}
+
+.journal-section {
+  margin-bottom: 28px;
+}
+
+.journal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.journal-prompts {
+  font-family: Inter, system-ui, sans-serif;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.journal-textarea {
+  width: 100%;
+  background: #080808;
+  color: #f0f0f0;
+  border: 1px solid #222;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.journal-save-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #151515;
+  color: #f0f0f0;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
