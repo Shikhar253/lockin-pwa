@@ -8,23 +8,27 @@ const HABITS = [
   { id: "sde",        category: "MISSION",      label: "SDE PREP",        icon: "⌨️", desc: "DSA / System Design / Projects" },
   { id: "noval",      category: "MISSION",      label: "NO VALORANT",     icon: "🚫", desc: "Not one game. Not one." },
   { id: "nosocial",   category: "MISSION",      label: "NO SOCIAL MEDIA", icon: "📵", desc: "No scrolling. No comparison." },
-  { id: "nogirls",    category: "MISSION",      label: "NO CHASING",      icon: "🧱", desc: "Feelings later. Mission first." },
-
+ { id: "nofap",      category: "MISSION",       label: "NO GOONING",      icon: "🧠", desc: "Protect your energy." },
+ {
+  id: "nocard",category: "MISSION",
+  label: "NO CARD SWIPE",
+  icon: "💳",
+  desc: "No non-essential card usage."
+},
   // Self-respect
   { id: "morningBrush", category: "SELF-RESPECT", label: "MORNING BRUSH", icon: "🪥", desc: "Start the day clean." },
   { id: "nightBrush",   category: "SELF-RESPECT", label: "NIGHT BRUSH",   icon: "🌙", desc: "End the day clean." },
   { id: "bath",         category: "SELF-RESPECT", label: "BATH",          icon: "🚿", desc: "Reset your body. Reset your mind." },
   { id: "washFace",     category: "SELF-RESPECT", label: "WASH FACE",     icon: "🧼", desc: "Look fresh. Feel fresh." },
-  { id: "deodorant",    category: "SELF-RESPECT", label: "DEODORANT",     icon: "🧴", desc: "Show up like you respect yourself." },
-  { id: "cleanClothes", category: "SELF-RESPECT", label: "CLEAN CLOTHES", icon: "👕", desc: "No sloppy energy." },
-
+  { id: "cleanroom",    category: "SELF-RESPECT", label: "CLEAN ROOM & TABLE",    icon: "🏠", desc: "How you live matters." },
+   { id: "nogirls",     category: "SELF-RESPECT", label: "NO GIRLS",      icon: "🙅‍♀️", desc: "Feelings later. Mission first." },
   // Health / Body
   { id: "eat",        category: "HEALTH",       label: "EAT CLEAN",       icon: "🥗", desc: "No junk. Real fuel." },
   { id: "exercise",   category: "HEALTH",       label: "EXERCISE",        icon: "🔥", desc: "Sweat. Every. Day." },
   { id: "steps",      category: "HEALTH",       label: "10K STEPS",       icon: "👣", desc: "Move your body." },
   { id: "water",      category: "HEALTH",       label: "3L WATER",        icon: "💧", desc: "Hydrate like an adult." },
   { id: "vitamin",    category: "HEALTH",       label: "MULTIVITAMIN",    icon: "💊", desc: "Small thing. Daily standard." },
-  { id: "nofap",      category: "HEALTH",       label: "NO GOONING",      icon: "🧠", desc: "Protect your energy." },
+ 
 ];
 
 const HABIT_CATEGORIES = ["MISSION", "SELF-RESPECT", "HEALTH"];
@@ -32,6 +36,8 @@ const HABIT_CATEGORIES = ["MISSION", "SELF-RESPECT", "HEALTH"];
 const QUOTES=[
 "6-7 saal ka damage. 6-7 mahine mein fix kar.",
 "Parents ki aankh mein woh shine laa.",
+"Job. Body. Discipline. Everything else can wait.",
+"Until death, all defeats are psychological. Win the mind, win the day.",   
 "Parents wait kar rahe hain. Lock tf in.",
 "Future > Feelings.",
 "Ek offer letter. Puri kahani badal jayegi.",
@@ -131,7 +137,7 @@ const QUOTES=[
 "Jitna dard hai. Utni badi comeback hogi.",
 "Har din ya toh build kar raha hai ya barbaad.",
 "Ek din parents ko bolna hai. Ho gaya.",
-"Tu job se ek interview door hai.",
+"Tu job se bas ek interview door hai.",
 "Bas ek breakthrough chahiye.",
 "Aaj ka discomfort. Kal ki respect.",
 "Khud ko prove kar. Kisi aur ko nahi.",
