@@ -397,7 +397,7 @@ export default function App() {
           </div>
           <div className="stat-card">
             <div className="stat-value" style={{ color: "var(--accent-blue)" }}>{daysLeft}</div>
-            <div className="stat-label">LEFT</div>
+            <div className="stat-label">DAYS LEFT</div>
           </div>
         </div>
 
