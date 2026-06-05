@@ -166,16 +166,37 @@ const QUOTES = [
 "One day you'll thank yourself for today's sacrifice."
 ];
 
+const APP_TIME_ZONE = "America/New_York";
 const GOAL_MONTHS = 6.5;
 const START_DATE = "2026-06-04";
 
+function getNYDateKey(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: APP_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+
+  const year = parts.find((p) => p.type === "year").value;
+  const month = parts.find((p) => p.type === "month").value;
+  const day = parts.find((p) => p.type === "day").value;
+
+  return `${year}-${month}-${day}`;
+}
+
+function parseDateKey(dateKey) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 function getTodayKey() {
-  return new Date().toISOString().split("T")[0];
+  return getNYDateKey();
 }
 
 function getDayNumber() {
-  const start = new Date(START_DATE);
-  const today = new Date();
+  const start = parseDateKey(START_DATE);
+  const today = parseDateKey(getTodayKey());
   const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
   return Math.max(1, diff);
 }
@@ -187,31 +208,43 @@ function getDaysLeft() {
 
 function getStreak(history) {
   let streak = 0;
-  const today = new Date();
+  const today = parseDateKey(getTodayKey());
+
   for (let i = 0; i < 365; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().split("T")[0];
+    const key = getNYDateKey(d);
     const dayData = history[key];
+
     if (!dayData) break;
+
     const allDone = HABITS.every((h) => dayData[h.id]);
     if (allDone) streak++;
     else break;
   }
+
   return streak;
 }
 
 function getLast14Days(history) {
   const days = [];
-  const today = new Date();
+  const today = parseDateKey(getTodayKey());
+
   for (let i = 13; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().split("T")[0];
+    const key = getNYDateKey(d);
     const dayData = history[key] || {};
     const done = HABITS.filter((h) => dayData[h.id]).length;
-    days.push({ key, done, total: HABITS.length, isToday: i === 0 });
+
+    days.push({
+      key,
+      done,
+      total: HABITS.length,
+      isToday: i === 0,
+    });
   }
+
   return days;
 }
 
@@ -346,9 +379,12 @@ export default function App() {
   const daysLeft = getDaysLeft();
   const totalDays = Math.round(GOAL_MONTHS * 30);
   const progress = Math.min(100, ((dayNum - 1) / totalDays) * 100);
-  const todayLabel = new Date().toLocaleDateString("en-IN", {
-    weekday: "long", day: "numeric", month: "short",
-  }).toUpperCase();
+ const todayLabel = new Date().toLocaleDateString("en-US", {
+  timeZone: APP_TIME_ZONE,
+  weekday: "long",
+  day: "numeric",
+  month: "short",
+}).toUpperCase();
 
   return (
     <div className="app">
