@@ -167,7 +167,7 @@ const QUOTES = [
 ];
 
 const APP_TIME_ZONE = "America/New_York";
-const GOAL_MONTHS = 6.5;
+const TOTAL_DAYS = 200;
 const START_DATE = "2026-06-04";
 
 function getNYDateKey(date = new Date()) {
@@ -202,8 +202,7 @@ function getDayNumber() {
 }
 
 function getDaysLeft() {
-  const totalDays = Math.round(GOAL_MONTHS * 30);
-  return Math.max(0, totalDays - getDayNumber() + 1);
+  return Math.max(0, TOTAL_DAYS - getDayNumber() + 1);
 }
 
 function getStreak(history) {
@@ -377,7 +376,7 @@ export default function App() {
   const last14 = getLast14Days(history);
   const dayNum = getDayNumber();
   const daysLeft = getDaysLeft();
-  const totalDays = Math.round(GOAL_MONTHS * 30);
+  const totalDays = TOTAL_DAYS;
   const progress = Math.min(100, ((dayNum - 1) / totalDays) * 100);
  const todayLabel = new Date().toLocaleDateString("en-US", {
   timeZone: APP_TIME_ZONE,
@@ -538,19 +537,24 @@ export default function App() {
           <div className="heatmap-grid">
             {last14.map((d) => {
               const bg = cellColor(d.done, d.total);
-              const dayLetter = new Date(d.key)
-                .toLocaleDateString("en-IN", { weekday: "short" })
-                .slice(0, 1);
+              const dayLetter = parseDateKey(d.key)
+  .toLocaleDateString("en-US", {
+    timeZone: APP_TIME_ZONE,
+    weekday: "short",
+  })
+  .slice(0, 1);
               return (
                 <div key={d.key} className="heatmap-cell-wrap">
-                  <div
-                    className={`heatmap-cell${d.isToday ? " today" : ""}`}
-                    style={{
-                      background: bg,
-                      opacity: d.done === 0 && !d.isToday ? 0.4 : 1,
-                    }}
-                    title={`${d.key}: ${d.done}/${d.total}`}
-                  />
+                 <div
+  className={`heatmap-cell${d.isToday ? " today" : ""}`}
+  style={{
+    background: bg,
+    opacity: d.done === 0 && !d.isToday ? 0.4 : 1,
+  }}
+  title={`${d.key}: ${d.done}/${d.total}`}
+>
+  {d.done > 0 ? d.done : ""}
+</div>
                   <span className="heatmap-day-label">{dayLetter}</span>
                 </div>
               );
